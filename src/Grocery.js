@@ -11,9 +11,9 @@ export default function Grocery(props){
       <h3>{props.qty}</h3>
       <h3>{props.city}</h3>
     
-      <button onClick={()=>props.handleDelete(props.name)}>Delete</button>
-      <button onClick={()=>props.handleIncrement(props.name)}>&#43;</button>
-      <button onClick={()=>props.handleDecrement(props.name)} disabled={props.qty===1}>&#8722;</button>
+      <button onClick={()=>props.handleDelete(props.id)}>Delete</button>
+      <button onClick={()=>props.handleIncrement(props.id, props.qty)}>&#43;</button>
+      <button onClick={()=>props.handleDecrement(props.id, props.qty)} disabled={props.qty===1}>&#8722;</button>
   </div>
   </div>
   )  

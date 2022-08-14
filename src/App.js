@@ -28,6 +28,8 @@ function App() {
   const [userInput, setUserInput]=useState("")
   const [errorMessage, setErrorMessage]=useState("")
   const [city, setCity]=useState("Chicago")
+  
+  
   useEffect(async () => {
     console.log("In useEffect")
     base
@@ -46,11 +48,13 @@ function App() {
   function handleClick(){
     const date=new Date();
     const id=date.getTime();
+    
     base
       .post(`groceries/${id}`, {
-        data: {id: id, name: userInput, qty:1, city: city},
+        data: {id: id, name: userInput, qty: 1, city: city}
       })
       .then(() => {
+        console.log("Success")
         onPostSuccess(id);
       })
       .catch((err) => {
@@ -60,7 +64,7 @@ function App() {
 
   function onPostSuccess(id){
     let copyOfCurrentItems=[...items]
-    copyOfCurrentItems.push({id: id, name: userInput, qty:1, city: city})
+    copyOfCurrentItems.push({id: id, name: userInput, qty: 1, city: city})
     setItems(copyOfCurrentItems)
   }
   
@@ -80,32 +84,69 @@ function App() {
   
   }
 
-  function handleDelete(name){
-    let copyOfCurrentItems=[...items]
-    copyOfCurrentItems=copyOfCurrentItems.filter(item => item.name !== name)
-    setItems(copyOfCurrentItems)
+  function handleDelete(id){
+    base
+    .remove(`groceries/${id}`)
+    .then(()=>{
+        console.log("Delete")
+        onDeleteSuccess(id);
+    })
   }
 
-  function handleIncrement(name){
+  function onDeleteSuccess(id){
+    let copyOfCurrentItems=[...items]
+    copyOfCurrentItems=copyOfCurrentItems.filter(item => item.id !== id)
+    setItems(copyOfCurrentItems)
+  }
+  
+  function handleIncrement(id, currentQty){
+    base
+    .update(`groceries/${id}`, {
+      data: {qty: currentQty+1}
+    })
+    .then(() => {
+      console.log("Success from increment")
+      console.log(id)
+      onIncrementSuccess(id);
+    })
+    .catch((err) => {
+      console.log(err);
+    });   
+  }
+
+  function onIncrementSuccess(id){
     let copyOfArray=[...items]
     copyOfArray=copyOfArray.map(item=> {
-      if (item.name===name){
-        item.qty=item.qty+1
+      if (item.id===id){
+        item.qty=item.qty+1;
       }
       return item
   })
     setItems(copyOfArray)
   }
-
-    function handleDecrement(name){
+  function handleDecrement(id, currentQty){
+    base
+    .update(`groceries/${id}`, {
+      data: {qty: currentQty-1}
+    })
+    .then(() => {
+      console.log("Success from decrement")
+      console.log(id)
+      onDecrementSuccess(id);
+    })
+    .catch((err) => {
+      console.log(err);
+    });   
+  }
+    function onDecrementSuccess(id){
       let copyOfArray=[...items]
       copyOfArray=copyOfArray.map(item=> {
-        if (item.name===name){
-          item.qty=item.qty-1
+        if (item.id===id){
+          item.qty=item.qty-1;
         }
         return item
     })
-      setItems(copyOfArray)
+      setItems(copyOfArray);
   }
 
   return (
@@ -119,7 +160,7 @@ function App() {
           <option value="Boston">Boston</option>
       </select>
       <p>{errorMessage}</p>
-      {items.map((item)=> <Grocery name={item.name} qty={item.qty} city={item.city} handleDelete={handleDelete} handleDecrement={handleDecrement} handleIncrement={handleIncrement}/>)}
+      {items.map((item)=> <Grocery name={item.name} id={item.id} qty={item.qty} city={item.city} handleDelete={handleDelete} handleDecrement={handleDecrement} handleIncrement={handleIncrement}/>)}
       
     </div>
   );
