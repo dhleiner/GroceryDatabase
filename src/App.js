@@ -6,6 +6,7 @@ import "./App.css";
 
 
 
+
 import Rebase from "re-base"
 import firebase from "firebase"
 
@@ -14,9 +15,9 @@ import firebase from "firebase"
 
 
 var app = firebase.initializeApp({
-  apiKey: 'AIzaSyAU0lwm_VZySgOpp2zIZER442Ia7BVrq3M',
+  apiKey: process.env.REACT_APP_API_KEY,
   authDomain: "agenda-5fb47.firebaseapp.com",
-  databaseURL: 'https://agenda-5fb47-default-rtdb.firebaseio.com/',
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
   storageBucket: 'bucket.appspot.com',
   messagingSenderId: "802065132383"
 });
@@ -24,6 +25,7 @@ var app = firebase.initializeApp({
 var base = Rebase.createClass(app.database());
 
 function App() {
+  console.log(process.env.REACT_APP_API_KEY)
   const [items, setItems] = useState([]);
   const [userInput, setUserInput]=useState("")
   const [errorMessage, setErrorMessage]=useState("")
