@@ -16,10 +16,10 @@ import firebase from "firebase"
 
 var app = firebase.initializeApp({
   apiKey: process.env.REACT_APP_API_KEY,
-  authDomain: "agenda-5fb47.firebaseapp.com",
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
   databaseURL: process.env.REACT_APP_DATABASE_URL,
-  storageBucket: 'bucket.appspot.com',
-  messagingSenderId: "802065132383"
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID
 });
 
 var base = Rebase.createClass(app.database());
@@ -83,8 +83,7 @@ function App() {
       else if (e.target.value.length===0){
         setErrorMessage("Must contain at least one character")
       }
-  
-  }
+    }
 
   function handleDelete(id){
     base
